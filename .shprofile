@@ -1,0 +1,122 @@
+# set PATH so it includes user's private bin if it exists
+#export PATH=$PATH:/opt/Ibin/scripts/
+#QT_QPA_PLATFORMTHEME=qt5ct
+export QT_QPA_PLATFORMTHEME=qt5ct
+#export PATH=$PATH:/opt/Ibin/discordWeb/
+export PATH=$PATH:/opt/Ibin/scripts/
+export PATH=$PATH:/opt/Ibin/scripts/bookmarks/
+export PATH=$PATH:$HOME/.local/bin/
+export GUI_TERM=st
+export TERMINAL=st
+alias patch1="patch -p1 <"
+alias v=nvim
+alias vim=nvim
+alias gnvim=goneovim
+alias gv=goneovim
+alias la='ls -a'
+alias swayspawn="XDG_SESSION_TYPE=wayland dbus-run-session sway --unsupported-gpu"
+#alias paru=yay
+alias ya=yay
+alias vconf="nvim ~/.config/nvim/init.vim"
+source ~/.shell/devouralias
+alias protoncfg="/tmp/proton_run winecfg"
+alias gpush=gitpush
+
+gi() {
+	/usr/bin/gitui "$@"
+}
+cdls() {
+        local dir="$1"
+        local dir="${dir:=$HOME}"
+        if [[ -d "$dir" ]]; then
+                cd "$dir" >/dev/null; ls --color=auto
+        else
+                echo "bash: cdls: $dir: Directory not found"
+        fi
+}
+#alias gi="gitui"
+
+#alias rm="echo "
+alias rm="rm -i"
+alias rmsafe="rmsafeon"
+alias rmsafeon="alias rm=rm && alias rmsafe='rmsafeoff' && echo 'rm=rm'"
+alias rmsafeoff="alias rm='rm -i' && alias rmsafe='rmsafeon' && echo 'rm=rm -i'"
+alias stx="exec startx"
+#check /etc/security/pam_env.conf for other $PATH uses
+export GTK_THEME="Arc-Dark-solid"
+#export | grep gtk
+echo "$(tput setaf 5)TRANS $(tput setaf 4)RIGHTS $(tput setaf 7)HELL YEAH!!"
+
+
+xwm () {
+	~/.xwm
+	read wm
+	exec startx $wm
+}
+
+
+dosu () {
+	doas su
+}
+rootdo() {
+  su -c "$@"
+}
+if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
+	xwm
+	#~/.xwm
+ 	#read wm
+	#exec startx $wm
+fi
+
+
+change_terminal_background() {
+ local COLOR="$1"
+
+ if [ "$TERM" = "screen-256color" ]; then
+# TMUX
+  echo -ne "\\ePtmux;\\e\\033]11;$COLOR\\007\\e\\\\"
+ else
+#  NOT TMUX
+  echo -ne "\\033]11;$COLOR\\007"
+ fi
+}
+nvim() {
+# Change the terminal's color when Vim starts
+  change_terminal_background "#1c1c1c"
+  /usr/bin/nvim "$@"
+
+# Change it back when it exits
+  change_terminal_background "#000000"
+}
+#put some tips here
+#up to 20% preformace echo 'always' | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
+#
+#
+#
+#
+cacheREfetch () {
+neofetch | grep -v Memory > $neofetchcache 2>&1
+cat $neofetchcache 2>/dev/null    
+}
+cachefetch () {
+	neofetchcache=~/.cache/neofetch
+	#cat $neofetchcache 2>/dev/null || neofetch | grep -v Memory > $neofetchcache 2>&1  
+	cat $neofetchcache 2>/dev/null || cacheREfetch   
+}
+cachefetch
+bluetoothfix () {
+sudo modprobe -r btusb && sudo modprobe btusb
+}
+rebluetooth () {
+arg1=$1
+echo -e "power on\n" | bluetoothctl
+echo -e "scan on\n" | bluetoothctl
+bluetoothctl -- remove $arg1
+sleep 5
+bluetoothctl -- pair $arg1
+sleep 10
+bluetoothctl -- trust $arg1
+bluetoothctl -- connect $arg1
+sleep 5
+echo -e "scan off\n" | bluetoothctl
+}
