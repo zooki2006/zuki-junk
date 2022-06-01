@@ -1,0 +1,101 @@
+#!/bin/sh
+wmcount=0
+wmcount=$(($wmcount+1))
+dwmcount=$wmcount
+wmcount=$(($wmcount+1)) # rm lamewm 
+lamewmcount=$wmcount # rm lamewm 
+wmcount=$(($wmcount+1))
+awesomecount=$wmcount
+wmcount=$(($wmcount+1))
+i3count=$wmcount
+wmcount=$(($wmcount+1)) # rm cwm 
+cwmcount=$wmcount # rm cwm 
+wmcount=$(($wmcount+1)) # rm openbox 
+openboxcount=$wmcount # rm openbox 
+#wmcount here
+
+
+listwm=""
+listwm="$listwm ($dwmcount) dwm"
+listwm="$listwm ($lamewmcount) lamewm" # rm lamewm
+listwm="$listwm ($awesomecount) awesome"
+listwm="$listwm ($i3count) i3" 
+listwm="$listwm ($cwmcount) cwm" # rm cwm
+listwm="$listwm ($openboxcount) openbox" # rm openbox
+#listwm=''
+sx=${sx:-"false"}
+if [ $sx = "true" ]
+then
+xwmlist='5'
+lock="false"
+wall="false"
+polkit="false"
+xrootstat="false"
+clip="true"
+check () {
+	checkvar=$1
+	program=$2
+	if [ $checkvar = "true" ]
+	then	
+		$program &
+	fi
+}
+case $session in
+    $dwmcount|dwm             ) wm='wm-stat dwm'
+	    lock="true"
+            wall="false"
+            wallsolid="true"
+	    polkit="false"
+	    xrootstat="false"
+	    dwmblocks="true"
+	    ;;
+    $awesomecount|awesome         ) wm='awesome'
+	    lock="true"
+	    polkit="false"
+	    ;;
+    $i3count|i3|i3wm         ) wm='i3'
+	    wall="true"
+	    lock="true"
+	    polkit="false"
+	    ;;
+    kde               ) wm="startplasma-x11";;
+    xfce|xfce4        ) wm="startxfce4";;
+    $cwmcount|cwm  ) wm='cwm' # rm cwm 
+            lock='true' # rm cwm 
+            wall='true' # rm cwm 
+            polkit='false' # rm cwm 
+            xrootstat='false' # rm cwm 
+            ;; # rm cwm 
+    $lamewmcount|lamewm  ) wm='wm-stat lamewm' # rm lamewm 
+            lock='true' # rm lamewm 
+            wall='true' # rm lamewm 
+            polkit='false' # rm lamewm 
+            xrootstat='true' # rm lamewm 
+            ;; # rm lamewm 
+    $openboxcount|openbox  ) wm='openbox' # rm openbox 
+            lock='true' # rm openbox 
+            wall='true' # rm openbox 
+            polkit='true' # rm openbox 
+            xrootstat='false' # rm openbox 
+            ;; # rm openbox 
+#replace|script    ) wm='wmhere'
+    *                 ) exec $2;;
+esac
+#check $lock lock.sh
+wallset () { 
+	xsetroot -solid "#1E242D" 
+}
+check $wall ~/.fehbg
+check $wallsolid wallset
+check $polkit lxqt-policykit-agent
+check $xrootstat dwm-statustray.sh 
+check $clip clipmenud  
+check $dwmblocks dwmblocks 
+rm ~/.cache/neofetch
+echo $session
+#echo $wm
+exec $wm
+else
+	echo "$listwm" | sed 's, ,,'
+fi
+
