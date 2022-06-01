@@ -32,6 +32,7 @@ wall="false"
 polkit="false"
 xrootstat="false"
 clip="true"
+sxhkdaemon="true"
 check () {
 	checkvar=$1
 	program=$2
@@ -86,6 +87,7 @@ wallset () {
 	xsetroot -solid "#1E242D" 
 }
 check $wall ~/.fehbg
+check $sxhkdaemon sxhkd
 check $wallsolid wallset
 check $polkit lxqt-policykit-agent
 check $xrootstat dwm-statustray.sh 
@@ -94,7 +96,8 @@ check $dwmblocks dwmblocks
 rm ~/.cache/neofetch
 echo $session
 #echo $wm
-exec $wm
+exec dbus-launch --sh-syntax --exit-with-session $wm
+#exec $wm
 else
 	echo "$listwm" | sed 's, ,,'
 fi
