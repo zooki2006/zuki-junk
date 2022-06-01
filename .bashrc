@@ -15,21 +15,8 @@ alias ls='ls --color=auto'
 PS1='[\u@\h \W]\$ '
 PS1='${GREEN}\u \W > ${RESET}'
 
-# --- ALIAS's --- 
-. ~/.shprofile
-##alias suvi='sudo vim'
-# ALIAS FOR PODCAST APP
-#alias pod='castero'
-# ALIAS FOR PROTON-UP PROTON-GE UPDATER
-alias proge="python -m protonup"
-# ALIAS FOR LIBRESPOT SO IT LOGINS IN ON RUN
-#alias lspt="librespot -U 5SP5PL9KPMY8N18GBT0JU8VIR -P KOIKMkoikm"
-# ALIAS NIGHT
-#alias night="sudo systemctl hibernate"
-#alias vim="nvim"
-
-#alias makin="sudo make install"
-# alias do='sudo !!'
+# source shprofile
+source ~/.shprofile
 
 # --- PATH EXPORTS ---
 export path="/home/zooki/.emacs.d/bin:$path"
